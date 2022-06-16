@@ -1,8 +1,8 @@
-package vporel.hibernate;
+package VPLibrary.hibernate;
 
 
 /**
- * Cette interface est implémentée par les entités ayant un identifiant de type Integer
+ * Cette interface est implï¿½mentï¿½e par les entitï¿½s ayant un identifiant de type Integer
  * @author VPOREL-DEV
  *
  */

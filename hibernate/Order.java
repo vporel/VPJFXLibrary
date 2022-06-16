@@ -1,4 +1,4 @@
-package vporel.hibernate;
+package VPLibrary.hibernate;
 
 
 public class Order{

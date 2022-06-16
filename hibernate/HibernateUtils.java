@@ -1,4 +1,4 @@
-package vporel.hibernate;
+package VPLibrary.hibernate;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class HibernateUtils {
 	/**
 	 * @param entityClass
 	 * @return
-	 * @throws NotEntityClassException S'assurer que la classe entité a l'annotation javax.persistence.Entity
+	 * @throws NotEntityClassException S'assurer que la classe entitï¿½ a l'annotation javax.persistence.Entity
 	 */
 	public static List<Field> getDatabaseFields(Class<?> entityClass) throws NotEntityClassException{
 		if(entityClass.isAnnotationPresent(Entity.class)){
@@ -34,7 +34,7 @@ public class HibernateUtils {
 			}
 			return fields;
 		}else {
-			throw new NotEntityClassException("La classe "+entityClass+" n'est pas une class entité");
+			throw new NotEntityClassException("La classe "+entityClass+" n'est pas une class entitï¿½");
 		}
 	}
 	
@@ -43,10 +43,10 @@ public class HibernateUtils {
 	 * @param entityClass
 	 * @param fieldName
 	 * @return
-	 * @throws NoSuchFieldException S'assurer que le champ existe bien dans la classe entité
+	 * @throws NoSuchFieldException S'assurer que le champ existe bien dans la classe entitï¿½
 	 * @throws SecurityException
 	 * @throws NoSuchDatabaseField S'assurer que le champ dans la classe a l'une des annotations javax.persistence.{Id, Column, ManyToOne, OneToOne, JoinColumn}
-	 * @throws NotEntityClassException S'assurer que la classe entité a l'annotation javax.persistence.Entity
+	 * @throws NotEntityClassException S'assurer que la classe entitï¿½ a l'annotation javax.persistence.Entity
 	 */
 	public static Field getDatabaseField(Class<?> entityClass, String fieldName) throws NoSuchFieldException, SecurityException, NoSuchDatabaseFieldException, NotEntityClassException {
 		if(entityClass.isAnnotationPresent(Entity.class)){
@@ -59,10 +59,10 @@ public class HibernateUtils {
 			) {
 				return field;
 			}else {
-				throw new NoSuchDatabaseFieldException("Le champ "+fieldName+" n'est pas reconnu dans la base données (N'a pas l'annotation Column() dans la classe entité");
+				throw new NoSuchDatabaseFieldException("Le champ "+fieldName+" n'est pas reconnu dans la base donnï¿½es (N'a pas l'annotation Column() dans la classe entitï¿½");
 			}
 		}else {
-			throw new NotEntityClassException("La classe "+entityClass+" n'est pas une class entité");
+			throw new NotEntityClassException("La classe "+entityClass+" n'est pas une class entitï¿½");
 		}
 	}
 	

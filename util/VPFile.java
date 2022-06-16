@@ -1,4 +1,4 @@
-package vporel.util;
+package VPLibrary.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,9 +7,9 @@ import java.util.Scanner;
 public class VPFile {
 	
 	public static String read(File file) throws FileNotFoundException{
-        Scanner scanner = new Scanner(file, "utf-8"); // utf-8 : encodage des caractères
+        Scanner scanner = new Scanner(file, "utf-8"); // utf-8 : encodage des caractï¿½res
 		String data = "";
-        if(scanner.hasNextLine()) //Test pour la récupération de la première ligne
+        if(scanner.hasNextLine()) //Test pour la rï¿½cupï¿½ration de la premiï¿½re ligne
         	while(scanner.hasNextLine()) 
 	        	data += scanner.nextLine();
 	    scanner.close();	

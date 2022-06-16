@@ -1,4 +1,4 @@
-package vporel.javafx.control;
+package VPLibrary.javafx.control;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

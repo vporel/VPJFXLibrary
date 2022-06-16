@@ -1,4 +1,4 @@
-package vporel.javafx.control;
+package VPLibrary.javafx.control;
 
 public class DoubleField extends NumberField<Double> {
    

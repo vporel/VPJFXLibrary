@@ -1,4 +1,4 @@
-package vporel.javafx.control;
+package VPLibrary.javafx.control;
 
 import java.util.Collection;
 import java.util.Optional;

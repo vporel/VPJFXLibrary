@@ -1,4 +1,4 @@
-package vporel.form;
+package VPLibrary.form;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class Select extends Field<Object> {
 	public Select(String label, String name, List<Object> options) {
 		super(label, name);
 		this.options = options;
-		errorMessage = "Selectionnez un élement";
+		errorMessage = "Selectionnez un ï¿½lement";
 	}
 	
 	public List<Object> getOptions(){

@@ -1,4 +1,4 @@
-package vporel.form.annotations;
+package VPLibrary.form.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Doit toujours être utilisée avec l'annotation Field
+ * Doit toujours ï¿½tre utilisï¿½e avec l'annotation Field
  * @author VPOREL-DEV
  *
  */

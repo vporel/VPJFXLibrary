@@ -1,8 +1,8 @@
-package vporel.util;
+package VPLibrary.util;
 
 /**
- * Contient des constantes définissant l'environnement dans lequel l'application est exécutée
- * DEV : Développement,
+ * Contient des constantes dï¿½finissant l'environnement dans lequel l'application est exï¿½cutï¿½e
+ * DEV : Dï¿½veloppement,
  * PROD : Production
  * @author VPOREL-DEV
  *

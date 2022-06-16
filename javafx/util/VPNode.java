@@ -1,11 +1,11 @@
-package vporel.javafx.util;
+package VPLibrary.javafx.util;
 
 import javafx.scene.Node;
 
 public class VPNode {
 	
 	/**
-	 * Fonction qui met pour un noeud les propriétés "visible" et "managed" à false
+	 * Fonction qui met pour un noeud les propriï¿½tï¿½s "visible" et "managed" ï¿½ false
 	 * @param node
 	 */
 	public static void hide(Node... nodes) {
@@ -16,7 +16,7 @@ public class VPNode {
 	}
 	
 	/**
-	 * Fonction qui met pour un noeud les propriétés "visible" et "managed" à true
+	 * Fonction qui met pour un noeud les propriï¿½tï¿½s "visible" et "managed" ï¿½ true
 	 * @param node
 	 */
 	public static void show(Node... nodes) {
@@ -27,7 +27,7 @@ public class VPNode {
 	}
 	
 	/**
-	 * Si la condition est vérifié, les éléments seront affichés, sinon ils seront masqués
+	 * Si la condition est vï¿½rifiï¿½, les ï¿½lï¿½ments seront affichï¿½s, sinon ils seront masquï¿½s
 	 * @param condition
 	 * @param nodes
 	 */

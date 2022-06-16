@@ -1,4 +1,4 @@
-package vporel.form;
+package VPLibrary.form;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;

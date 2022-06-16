@@ -1,11 +1,11 @@
-package vporel.javafx.form;
+package VPLibrary.javafx.form;
 
 import java.util.function.Predicate;
 
 /**
- * Ceci est une classe abstraite implémentant l'interface  Predicate
- * Elle permet de définir un message d'erreur qui pourra être affiché si le prédicat est faux
- * Il est important de définir ce message car s'il est null, l'utilisateur ne pourra pas savoir ce qui l'empêche d'avancer
+ * Ceci est une classe abstraite implï¿½mentant l'interface  Predicate
+ * Elle permet de dï¿½finir un message d'erreur qui pourra ï¿½tre affichï¿½ si le prï¿½dicat est faux
+ * Il est important de dï¿½finir ce message car s'il est null, l'utilisateur ne pourra pas savoir ce qui l'empï¿½che d'avancer
  * @author VPOREL-DEV
  *
  * @param <Entity>

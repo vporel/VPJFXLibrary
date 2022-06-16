@@ -1,17 +1,17 @@
-package vporel.util;
+package VPLibrary.util;
 
 import java.util.List;
 
 /**
- * Implémentée par les classes fournissant des éléments qui peuvent être retrouvés à partir d'une chaine de caractères
+ * Implï¿½mentï¿½e par les classes fournissant des ï¿½lï¿½ments qui peuvent ï¿½tre retrouvï¿½s ï¿½ partir d'une chaine de caractï¿½res
  * @author VPOREL-DEV
  *
  */
 public interface FindableByString<ElementsClass> {
 	
 	/**
-	 * Retrouver un élément à partir d'une chaine de caractère
-	 * On peut donc parcourir tous les élements en appelant à chaque fois la méthode toString
+	 * Retrouver un ï¿½lï¿½ment ï¿½ partir d'une chaine de caractï¿½re
+	 * On peut donc parcourir tous les ï¿½lements en appelant ï¿½ chaque fois la mï¿½thode toString
 	 * @param str
 	 * @return
 	 * @throws IllegalArgumentException

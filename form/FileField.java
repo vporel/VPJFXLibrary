@@ -1,4 +1,4 @@
-package vporel.form;
+package VPLibrary.form;
 
 public class FileField extends Field<String>{
 	
@@ -53,7 +53,7 @@ public class FileField extends Field<String>{
                                 default: $object->$method($pathinfo["basename"]);break;
                             }
                         }else{
-                            throw new \Exception("Impossible d'effectuer la sauvegarde car aucun object n'a été fourni");
+                            throw new \Exception("Impossible d'effectuer la sauvegarde car aucun object n'a ï¿½tï¿½ fourni");
                         }
                     }
                     return true;        

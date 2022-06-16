@@ -1,4 +1,4 @@
-package vporel.javafx.control;
+package VPLibrary.javafx.control;
 
 public class LongField extends NumberField<Long> {
    

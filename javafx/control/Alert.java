@@ -1,4 +1,4 @@
-package vporel.javafx.control;
+package VPLibrary.javafx.control;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,7 +24,7 @@ public class Alert extends javafx.scene.control.Alert{
 	}
 
 	/**
-	 * Crée une instance de CustomAlert et affiche directement la boîte de dialogue
+	 * Crï¿½e une instance de CustomAlert et affiche directement la boï¿½te de dialogue
 	 * Ici le type est automatique une AlertType.INFORMATION
 	 * @param title
 	 * @param headerText
@@ -35,7 +35,7 @@ public class Alert extends javafx.scene.control.Alert{
 	}
 	
 	/**
-	 * Crée une instance de CustomAlert et affiche directement la boîte de dialogue
+	 * Crï¿½e une instance de CustomAlert et affiche directement la boï¿½te de dialogue
 	 * Ici le type est automatique une AlertType.CONFIRMATION
 	 * 
 	 * Les boutons types fournis sont ButtonType.OK et ButtonType.CANCEL

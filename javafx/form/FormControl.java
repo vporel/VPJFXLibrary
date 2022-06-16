@@ -1,4 +1,4 @@
-package vporel.javafx.form;
+package VPLibrary.javafx.form;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,25 +17,25 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
-import vporel.form.DateField;
-import vporel.form.DoubleField;
-import vporel.form.Field;
-import vporel.form.Input;
-import vporel.form.IntegerField;
-import vporel.form.LongField;
-import vporel.form.Option;
-import vporel.form.Select;
-import vporel.form.TextArea;
-import vporel.javafx.control.DateTimePicker;
-import vporel.javafx.control.NumberField;
-import vporel.javafx.util.ControlFX;
-import vporel.util.VPString;
+import VPLibrary.form.DateField;
+import VPLibrary.form.DoubleField;
+import VPLibrary.form.Field;
+import VPLibrary.form.Input;
+import VPLibrary.form.IntegerField;
+import VPLibrary.form.LongField;
+import VPLibrary.form.Option;
+import VPLibrary.form.Select;
+import VPLibrary.form.TextArea;
+import VPLibrary.javafx.control.DateTimePicker;
+import VPLibrary.javafx.control.NumberField;
+import VPLibrary.javafx.util.ControlFX;
+import VPLibrary.util.VPString;
 
 public class FormControl{
 	private Field<?> field;
 	private Control control;
 	/**
-	 * Dans le constructeur, le texte d'erreur est lié au texte entré par l'utilisateur
+	 * Dans le constructeur, le texte d'erreur est liï¿½ au texte entrï¿½ par l'utilisateur
 	 */
 	private Text errorText = new Text("");
 	private Label label;
@@ -62,15 +62,15 @@ public class FormControl{
 					return "Remplissez ce champ";
 				}
 				if(
-					field instanceof vporel.form.NumberField && ((vporel.form.NumberField) field).test(((NumberField) control).getValue())
-					|| field instanceof vporel.form.TextField && ((vporel.form.TextField) field).test(((TextField) control).getText())
-					|| field instanceof vporel.form.TextArea
+					field instanceof VPLibrary.form.NumberField && ((VPLibrary.form.NumberField) field).test(((NumberField) control).getValue())
+					|| field instanceof VPLibrary.form.TextField && ((VPLibrary.form.TextField) field).test(((TextField) control).getText())
+					|| field instanceof VPLibrary.form.TextArea
 				) {
-					if(!(field instanceof vporel.form.TextArea)) {
+					if(!(field instanceof VPLibrary.form.TextArea)) {
 						for(FormPredicate predicate:predicates) {
 							if(
-								(field instanceof vporel.form.NumberField && !predicate.test(((NumberField) control).getValue()))
-								|| (field instanceof vporel.form.TextField && !predicate.test(((TextField) control).getText()))
+								(field instanceof VPLibrary.form.NumberField && !predicate.test(((NumberField) control).getValue()))
+								|| (field instanceof VPLibrary.form.TextField && !predicate.test(((TextField) control).getText()))
 							)
 								return predicate.getErrorMessage();
 						}
@@ -83,7 +83,7 @@ public class FormControl{
 			bindAutoCompletion();
 			errorText.textProperty().bind(Bindings.createStringBinding(() -> {
 				if(field.isRequired() && ((ComboBox<Object>) control).getSelectionModel().getSelectedItem() == null) {
-					return "Choisissez un élément";
+					return "Choisissez un ï¿½lï¿½ment";
 				}
 				if(((Select) field).test(((ComboBox<Object>) control).getSelectionModel().getSelectedItem())) {
 					for(FormPredicate predicate:predicates) {
@@ -106,14 +106,14 @@ public class FormControl{
 		control = new TextField(); // Default if field instanceof TextLine
 		if(field instanceof TextArea) {
 			control = new javafx.scene.control.TextArea();
-		}else if(field instanceof vporel.form.PasswordField) {
+		}else if(field instanceof VPLibrary.form.PasswordField) {
 			control = new PasswordField();
 		}else if(field instanceof IntegerField) {
-			control = new vporel.javafx.control.IntegerField();
+			control = new VPLibrary.javafx.control.IntegerField();
 		}else if(field instanceof LongField) {
-			control = new vporel.javafx.control.LongField();
+			control = new VPLibrary.javafx.control.LongField();
 		}else if(field instanceof DoubleField) {
-			control = new vporel.javafx.control.DoubleField();
+			control = new VPLibrary.javafx.control.DoubleField();
 		}else if(field instanceof DateField) {
 			control = new DateTimePicker();
 		}else if(field instanceof Select) {

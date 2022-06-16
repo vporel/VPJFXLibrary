@@ -1,4 +1,4 @@
-package vporel.javafx.control;
+package VPLibrary.javafx.control;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -24,22 +24,22 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import vporel.form.Field;
-import vporel.form.Form;
-import vporel.form.FormFromAnnotations;
-import vporel.form.NullFormObjectException;
-import vporel.hibernate.HasId;
-import vporel.util.VPArray;
+import VPLibrary.form.Field;
+import VPLibrary.form.Form;
+import VPLibrary.form.FormFromAnnotations;
+import VPLibrary.form.NullFormObjectException;
+import VPLibrary.hibernate.HasId;
+import VPLibrary.util.VPArray;
 
 /**
- * Classe s'utilisant uniquement avec des entités, les colonnes d'entête sont les attributs de ces entités
+ * Classe s'utilisant uniquement avec des entitï¿½s, les colonnes d'entï¿½te sont les attributs de ces entitï¿½s
  * 
- * Dans cette classe, il est important que l'utilisateur passe les éléments du tableau dans le contructeur
- * et n'appelle la méthode setItems que si les éléments ne seront pas soumis à un filtre
- * Si cela se produit, le mécanisme de filtrage mis en place ne sera plus utilisable 
- * et l'utilisateur devra s'en occuper lui-même extérieurement
+ * Dans cette classe, il est important que l'utilisateur passe les ï¿½lï¿½ments du tableau dans le contructeur
+ * et n'appelle la mï¿½thode setItems que si les ï¿½lï¿½ments ne seront pas soumis ï¿½ un filtre
+ * Si cela se produit, le mï¿½canisme de filtrage mis en place ne sera plus utilisable 
+ * et l'utilisateur devra s'en occuper lui-mï¿½me extï¿½rieurement
  * 
- * Pour ajouter un élément à la liste, utiliser plutôt la fonction getActualList instead
+ * Pour ajouter un ï¿½lï¿½ment ï¿½ la liste, utiliser plutï¿½t la fonction getActualList instead
  * 
  * @author VPOREL-DEV
  *
@@ -56,7 +56,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	private Map<String, String> extraColumns = null;
 	
 	/**
-	 * Les champs de l'entité qui doivent être affichés doivent avoir l'annotation Field de vporel.form.annotations
+	 * Les champs de l'entitï¿½ qui doivent ï¿½tre affichï¿½s doivent avoir l'annotation FieVPLibrary.porel.form.annotations
 	 * @param entityClass
 	 * @param items
 	 * @param actionBtnsCallbacks
@@ -66,7 +66,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	}
 	
 	/**
-	 * Les champs de l'entité qui doivent être affichés doivent avoir l'annotation Field de vporel.form.annotations
+	 * Les champs de l'entitï¿½ qui doivent ï¿½tre affichï¿½s doivent avoir l'annotation FieVPLibrary.porel.form.annotations
 	 * @param entityClass
 	 * @param items
 	 * @param hiddenColumns
@@ -81,10 +81,10 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	}
 	
 	/**
-	 * Les champs de l'entité qui doivent être affichés doivent avoir l'annotation Field de vporel.form.annotations
+	 * Les champs de l'entitï¿½ qui doivent ï¿½tre affichï¿½s doivent avoir l'annotation FieVPLibrary.porel.form.annotations
 	 * @param entityClass
 	 * @param items
-	 * @param hiddenColumns Les propriétés de l'entité à ne pas afficher
+	 * @param hiddenColumns Les propriï¿½tï¿½s de l'entitï¿½ ï¿½ ne pas afficher
 	 * @param extraColumns Map<String, String> name, label
 	 * @param actionBtnsCallbacks
 	 */
@@ -194,7 +194,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	
 	/**
 	 * Ici il n'y a aucun texte
-	 * Le graphic(icon) est généré à partir de la librairie Ikonli
+	 * Le graphic(icon) est gï¿½nï¿½rï¿½ ï¿½ partir de la librairie Ikonli
 	 * @param eventName
 	 * @param fontAwesomeLiteral Nom de l'icon dans Font Awesome (cette icon aura la classe 'icon')
 	 * @return
@@ -204,7 +204,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	}
 	
 	/**
-	 * Le graphic(icon) est généré à partir de la librairie Ikonli
+	 * Le graphic(icon) est gï¿½nï¿½rï¿½ ï¿½ partir de la librairie Ikonli
 	 * @param eventName
 	 * @param text
 	 * @param fontAwesomeLiteral Nom de l'icon dans Font Awesome (cette icon aura la classe 'icon')
@@ -232,7 +232,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 		
 		private Object object;
 		/**
-		 * Propriété spécifique permettant de savoir quel bouton a déclenché l'évènement sur la liste
+		 * Propriï¿½tï¿½ spï¿½cifique permettant de savoir quel bouton a dï¿½clenchï¿½ l'ï¿½vï¿½nement sur la liste
 		 */
 		private String name;
 		

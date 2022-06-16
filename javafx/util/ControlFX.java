@@ -1,4 +1,4 @@
-package vporel.javafx.util;
+package VPLibrary.javafx.util;
 
 import java.util.regex.Pattern;
 
@@ -10,7 +10,7 @@ import javafx.scene.input.MouseButton;
 import javafx.util.StringConverter;
 
 public class ControlFX {
-	// Fonction non utilisé et remplacée par une fonctionnalité (bindAutoCompletion) de controlsFX
+	// Fonction non utilisï¿½ et remplacï¿½e par une fonctionnalitï¿½ (bindAutoCompletion) de controlsFX
 	/**/
 	public static void handleEditableComboBox(ComboBox<Object> comboBoxControl) {
 		ObservableList<Object> options = comboBoxControl.getItems();

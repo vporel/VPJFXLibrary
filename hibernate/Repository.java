@@ -1,4 +1,4 @@
-package vporel.hibernate;
+package VPLibrary.hibernate;
 
 
 import java.util.ArrayList;
@@ -32,8 +32,8 @@ public abstract class Repository<T> {
 	
 	/**
 	 * Warning
-	 * Fonction trop spécifique
-	 * A utiliser uniquement avec des entités qui ont l'attribut id
+	 * Fonction trop spï¿½cifique
+	 * A utiliser uniquement avec des entitï¿½s qui ont l'attribut id
 	 * @param id
 	 * @return
 	 */

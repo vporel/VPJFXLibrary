@@ -1,8 +1,8 @@
-package vporel.form;
+package VPLibrary.form;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import vporel.util.PasswordSecure;
+import VPLibrary.util.PasswordSecure;
 
 public class PasswordField extends TextField{
 

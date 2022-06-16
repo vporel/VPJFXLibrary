@@ -1,4 +1,4 @@
-package vporel.form;
+package VPLibrary.form;
 
 public class DoubleField extends NumberField<Double>{
 	
@@ -17,11 +17,11 @@ public class DoubleField extends NumberField<Double>{
 	@Override
 	protected void changeErrorMessage(Double min, Double max) {
 		if(min > Double.MIN_VALUE && max == Double.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entré n'est pas supérieur ou égal à "+min);
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas supï¿½rieur ou ï¿½gal ï¿½ "+min);
 		else if(min == Double.MIN_VALUE && max <= Double.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entré n'est pas inférieur ou egal à "+max);
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas infï¿½rieur ou egal ï¿½ "+max);
 		else
-			this.setErrorMessage( "Le nombre entré n'est pas dans l'intervalle ["+min+", "+max+"]");
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas dans l'intervalle ["+min+", "+max+"]");
 		
 	}
 

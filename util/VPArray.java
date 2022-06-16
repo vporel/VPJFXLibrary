@@ -1,4 +1,4 @@
-package vporel.util;
+package VPLibrary.util;
 
 public class VPArray {
 	/**

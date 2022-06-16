@@ -1,13 +1,13 @@
-package vporel.form;
+package VPLibrary.form;
 
 import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 
-import vporel.form.annotations.FormUsableEntity;
-import vporel.form.annotations.FormUsableEntity.DEFAULT_VALIDATOR;
-import vporel.javafx.form.FormPredicate;
+import VPLibrary.form.annotations.FormUsableEntity;
+import VPLibrary.form.annotations.FormUsableEntity.DEFAULT_VALIDATOR;
+import VPLibrary.javafx.form.FormPredicate;
 
 public class FormFromAnnotations<Entity> extends Form<Entity>{
 	private FormPredicate<Entity> validator;
@@ -46,37 +46,37 @@ public class FormFromAnnotations<Entity> extends Form<Entity>{
 		}
 		for(java.lang.reflect.Field field: this.object.getClass().getDeclaredFields()) {
 			field.setAccessible(true);
-			if(field.isAnnotationPresent(vporel.form.annotations.Field.class)) {
+			if(field.isAnnotationPresent(VPLibrary.form.annotations.Field.class)) {
 				Field<?> formField = null;
-				if(field.isAnnotationPresent(vporel.form.annotations.TextField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.TextField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.PasswordField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.PasswordField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.EmailField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.EmailField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.IntegerField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.IntegerField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.LongField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.LongField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.DoubleField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.DoubleField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.DateField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.DateField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.TextAreaField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.TextAreaField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.FileField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.FileField.class));
-				}else if(field.isAnnotationPresent(vporel.form.annotations.SelectField.class)) {
+				if(field.isAnnotationPresent(VPLibrary.form.annotations.TextField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.TextField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.PasswordField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.PasswordField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.EmailField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.EmailField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.IntegerField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.IntegerField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.LongField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.LongField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.DoubleField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.DoubleField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.DateField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.DateField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.TextAreaField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.TextAreaField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.FileField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.FileField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.SelectField.class)) {
 					try {
-						formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.SelectField.class));
+						formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.SelectField.class));
 					} catch (NoOptionException e) {e.printStackTrace();}
-				}else if(field.isAnnotationPresent(vporel.form.annotations.RelationField.class)) {
-					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vporel.form.annotations.RelationField.class));
+				}else if(field.isAnnotationPresent(VPLibrary.form.annotations.RelationField.class)) {
+					formField = FieldFactory.getField(field.getName(), field.getAnnotation(VPLibrary.form.annotations.RelationField.class));
 				}
 				
 				if(formField != null) {
-					formField.setLabel(field.getAnnotation(vporel.form.annotations.Field.class).label());
-					formField.setTooltip(field.getAnnotation(vporel.form.annotations.Field.class).tooltip());
+					formField.setLabel(field.getAnnotation(VPLibrary.form.annotations.Field.class).label());
+					formField.setTooltip(field.getAnnotation(VPLibrary.form.annotations.Field.class).tooltip());
 					//Nullability
 					if(field.isAnnotationPresent(Column.class)) {
 						formField.setRequired(!field.getAnnotation(Column.class).nullable());
@@ -85,7 +85,7 @@ public class FormFromAnnotations<Entity> extends Form<Entity>{
 					}
 					
 				}else {
-					formField = new Field<Object>(field.getAnnotation(vporel.form.annotations.Field.class).label(), field.getName()) {
+					formField = new Field<Object>(field.getAnnotation(VPLibrary.form.annotations.Field.class).label(), field.getName()) {
 
 						@Override
 						public boolean test(Object value) {

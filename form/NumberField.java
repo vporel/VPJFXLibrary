@@ -1,4 +1,4 @@
-package vporel.form;
+package VPLibrary.form;
 
 public abstract class NumberField<T extends Number> extends Input<T> {
 	
@@ -36,11 +36,11 @@ public abstract class NumberField<T extends Number> extends Input<T> {
 	/**
 	 * Structure
 	 * if(min > T.MIN_VALUE && max == T.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entré n'est pas supérieur à "+min);
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas supï¿½rieur ï¿½ "+min);
 		else if(min == T.MIN_VALUE && max <= T.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entré n'est pas inférieur à "+max);
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas infï¿½rieur ï¿½ "+max);
 		else
-			this.setErrorMessage( "Le nombre entré n'est pas dans l'intervalle ["+min+","+max+"]");
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas dans l'intervalle ["+min+","+max+"]");
 	 * @param min
 	 * @param max
 	 */

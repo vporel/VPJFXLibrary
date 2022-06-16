@@ -1,10 +1,10 @@
-package vporel.form;
+package VPLibrary.form;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import vporel.util.VPString;
+import VPLibrary.util.VPString;
 
 
 public abstract class Form<Entity> {
@@ -24,7 +24,7 @@ public abstract class Form<Entity> {
 		if(object != null)
 			this.object = object;
 		else
-			throw new NullFormObjectException("L'object passé au constructeur du formulaire est null.");
+			throw new NullFormObjectException("L'object passï¿½ au constructeur du formulaire est null.");
 
         build();
 	}
@@ -70,7 +70,7 @@ public abstract class Form<Entity> {
 	}
     
     /**
-     * Peut être appelée pour hydrater l'objet en paramètre en lui passant les données (aussi en paramètre)
+     * Peut ï¿½tre appelï¿½e pour hydrater l'objet en paramï¿½tre en lui passant les donnï¿½es (aussi en paramï¿½tre)
      * @param objectData
      * @param obj
      */

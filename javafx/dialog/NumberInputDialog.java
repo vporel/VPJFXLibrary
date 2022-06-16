@@ -1,4 +1,4 @@
-package vporel.javafx.dialog;
+package VPLibrary.javafx.dialog;
 
 import java.util.Optional;
 
@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyEvent;
-import vporel.javafx.form.FormPredicate;
+import VPLibrary.javafx.form.FormPredicate;
 
 public abstract class NumberInputDialog<T> extends TextInputDialog{
 	private ObservableList<FormPredicate<T>> predicates = FXCollections.observableArrayList();
@@ -57,8 +57,8 @@ public abstract class NumberInputDialog<T> extends TextInputDialog{
 		return (ch >= '0' && ch <= '9');
 	}
 	/**
-	 * Le prédicat est testé lors de la modification de la valeur du champ texte
-	 * LE message du prédicat sera affiché dans la zone ContentText
+	 * Le prï¿½dicat est testï¿½ lors de la modification de la valeur du champ texte
+	 * LE message du prï¿½dicat sera affichï¿½ dans la zone ContentText
 	 * @param predicate
 	 */
 	public void addPredicate(FormPredicate<T> predicate) {

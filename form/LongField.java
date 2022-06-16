@@ -1,4 +1,4 @@
-package vporel.form;
+package VPLibrary.form;
 
 
 public class LongField extends NumberField<Long>{
@@ -19,11 +19,11 @@ public class LongField extends NumberField<Long>{
 	protected void changeErrorMessage(Long min, Long max) {
 		// TODO Auto-generated method stub
 		if(min > Long.MIN_VALUE && max == Long.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entré n'est pas supérieur à "+min);
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas supï¿½rieur ï¿½ "+min);
 		else if(min == Long.MIN_VALUE && max <= Long.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entré n'est pas inférieur à "+max);
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas infï¿½rieur ï¿½ "+max);
 		else
-			this.setErrorMessage( "Le nombre entré n'est pas dans l'intervalle ["+min+","+max+"]");
+			this.setErrorMessage( "Le nombre entrï¿½ n'est pas dans l'intervalle ["+min+","+max+"]");
 	}
 
 }

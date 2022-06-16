@@ -1,4 +1,4 @@
-package vporel.javafx.form;
+package VPLibrary.javafx.form;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import vporel.form.Form;
-import vporel.hibernate.HasId;
+import VPLibrary.form.Form;
+import VPLibrary.hibernate.HasId;
 
 public class FormPane<Entity> extends GridPane{
 	private Form<Entity> form;
@@ -28,7 +28,7 @@ public class FormPane<Entity> extends GridPane{
 	private Button resetButton = new Button("Reset");
 	private Button submitButton = new Button("Submit");
 	private Label caption = new Label("Form");
-	private final String defaultErrorText = "Vérifiez tous les champs";
+	private final String defaultErrorText = "Vï¿½rifiez tous les champs";
 	private Text errorText = new Text("");
 	
 	private GridPane elementsGrid;
@@ -73,8 +73,8 @@ public class FormPane<Entity> extends GridPane{
 	}
 	
 	/**
-	 * Le prédicat est testé lors de la vérification du formulaire tout entier
-	 * La vérification se fait sur l'objet et non sur des attributs particuliés
+	 * Le prï¿½dicat est testï¿½ lors de la vï¿½rification du formulaire tout entier
+	 * La vï¿½rification se fait sur l'objet et non sur des attributs particuliï¿½s
 	 * @param predicate
 	 */
 	public void addPredicate(FormPredicate<Entity> predicate) {
@@ -103,7 +103,7 @@ public class FormPane<Entity> extends GridPane{
 				return fc;
 			}
 		}
-		throw new NoSuchControlException("Contrôle ["+name+"] non trouvée");
+		throw new NoSuchControlException("Contrï¿½le ["+name+"] non trouvï¿½e");
 	}
 	
 	public void controlsSetDisable(boolean disable, String... names) throws NoSuchControlException {
@@ -138,7 +138,7 @@ public class FormPane<Entity> extends GridPane{
 	}
 		
 	/**
-	 * Retorune les valeurs des différents controls, qu'elles soient valides ou pas
+	 * Retorune les valeurs des diffï¿½rents controls, qu'elles soient valides ou pas
 	 * @return HashMap
 	 */
 	public HashMap<String, Object> getData(){
@@ -197,9 +197,9 @@ public class FormPane<Entity> extends GridPane{
 	
 	/**
 	 * Le test est d'abord fait sur les champs individuellement
-	 * Ensuite le formulaire tout entier (généralement pour s'assurer que les champs mis ensemble ont des informations cohérentes)
-	 * Enfin on teste les autres prédicats ajoutés
-	 * @return true si les données sont valides, false sinon
+	 * Ensuite le formulaire tout entier (gï¿½nï¿½ralement pour s'assurer que les champs mis ensemble ont des informations cohï¿½rentes)
+	 * Enfin on teste les autres prï¿½dicats ajoutï¿½s
+	 * @return true si les donnï¿½es sont valides, false sinon
 	 */
 	public boolean isValid() {
 		boolean valid = true;
@@ -259,7 +259,7 @@ public class FormPane<Entity> extends GridPane{
 				return;
 			}
 		}
-		throw new Exception("Liste ["+listName+"] non trouvée");
+		throw new Exception("Liste ["+listName+"] non trouvï¿½e");
 	}
 	
 	public void reset() {
@@ -294,7 +294,7 @@ public class FormPane<Entity> extends GridPane{
 		for(FormControl control : formControls) {
 			elementsGrid.add(control.getPane(orientation), elementsGridColumn, elementsGridRow);
 			elementsGridColumn++;
-			if(elementsGridColumn >= this.columnsCount) { // Si on est à la fin de la ligne, on passe à la premiere colonne de la ligne suivante
+			if(elementsGridColumn >= this.columnsCount) { // Si on est ï¿½ la fin de la ligne, on passe ï¿½ la premiere colonne de la ligne suivante
 				elementsGridColumn = 0;
 				elementsGridRow++;
 			}
