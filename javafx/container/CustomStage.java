@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import com.stockappro.util.CustomAlert;
-
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Cursor;
@@ -14,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -67,7 +66,10 @@ public class CustomStage extends Stage{
 		});
 		this.setOnCloseRequest(event -> {
 			if(canExitSystem) {
-				CustomAlert confirmation = new CustomAlert(AlertType.CONFIRMATION, "Confirmation", "Confirmation de fermeture", "Voulez-vous vraiment quitter le programme ? ");
+				Alert confirmation = new Alert(AlertType.CONFIRMATION);
+				confirmation.setTitle("Confirmation");
+				confirmation.setHeaderText("Confirmation de fermeture");
+				confirmation.setContentText("Voulez-vous vraiment quitter le programme ? ");
 				Optional<ButtonType> option = confirmation.showAndWait();
 				if(option.get() == ButtonType.OK) { 
 					System.exit(0);

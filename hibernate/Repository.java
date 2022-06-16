@@ -14,20 +14,18 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
-import com.stockappro.util.Hibernate;
-
-public abstract class Repository<T> {
+public abstract class Repository<T extends Entity> {
 	
-	protected static Session session;
-	
-	static {
-		session = Hibernate.getSession();
-	}
+	/**
+	 * La session d'hibernate à utiliser
+	 * @return
+	 */
+	protected abstract Session getSession();
 	
 	public abstract Class<T> getEntityClass();
 	
 	public T find(int id) {
-		return (T) session.get(getEntityClass(), id);
+		return (T) getSession().get(getEntityClass(), id);
 	}
 	
 	/**
@@ -60,7 +58,7 @@ public abstract class Repository<T> {
 	}
 	
 	public T findOneBy(Map<String, ? extends Object > criteria) throws NoSuchDatabaseFieldException{
-		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(getEntityClass());
 		Root<T> root = query.from(getEntityClass());
 		query.select(root);
@@ -72,7 +70,7 @@ public abstract class Repository<T> {
 			}
 		}
 		try {
-			return (T) session.createQuery(query).getResultList().get(0);
+			return (T) getSession().createQuery(query).getResultList().get(0);
 		}catch(NoResultException e) {
 			return null;
 		}
@@ -131,7 +129,7 @@ public abstract class Repository<T> {
 	 * @return
 	 */
 	public List<T> findBy(Map<String, ?> criteria, Order[] orders, int maxResults, int firstResult) {
-		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(getEntityClass());
 		Root<T> root = query.from(getEntityClass());
 		query.select(root);
@@ -148,7 +146,7 @@ public abstract class Repository<T> {
 		}
 		
 		try {
-			return (List<T>) session.createQuery(query).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+			return (List<T>) getSession().createQuery(query).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
 		}catch(NoResultException e) {
 			return new ArrayList<T>();
 		}
@@ -158,7 +156,7 @@ public abstract class Repository<T> {
 	public List<T> findAll() {
 		String query = "FROM "+getEntityClass().getName();
 		try {
-			return (List<T>) session.createQuery(query).getResultList();
+			return (List<T>) getSession().createQuery(query).getResultList();
 		}catch(NoResultException e) {
 			return new ArrayList<T>();
 		}

@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.stockappro.entity.Category;
-
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.StringConverter;
 import vplibrary.form.DateField;
 import vplibrary.form.DoubleField;
 import vplibrary.form.Field;
