@@ -1,4 +1,4 @@
-package VPLibrary.javafx.form;
+package vplibrary.javafx.form;
 
 import java.util.function.Predicate;
 

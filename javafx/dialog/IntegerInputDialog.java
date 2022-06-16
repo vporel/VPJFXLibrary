@@ -1,4 +1,4 @@
-package VPLibrary.javafx.dialog;
+package vplibrary.javafx.dialog;
 
 public class IntegerInputDialog extends NumberInputDialog<Integer>{
 	public IntegerInputDialog(int i) {

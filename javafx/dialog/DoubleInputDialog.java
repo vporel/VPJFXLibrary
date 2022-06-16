@@ -1,4 +1,4 @@
-package VPLibrary.javafx.dialog;
+package vplibrary.javafx.dialog;
 
 public class DoubleInputDialog extends NumberInputDialog<Double>{
 	public DoubleInputDialog(double i) {

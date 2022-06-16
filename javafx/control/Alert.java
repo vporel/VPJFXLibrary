@@ -1,4 +1,4 @@
-package VPLibrary.javafx.control;
+package vplibrary.javafx.control;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;

@@ -1,4 +1,4 @@
-package VPLibrary.hibernate;
+package vplibrary.hibernate;
 
 public class NoSuchDatabaseFieldException extends Exception {
 	public NoSuchDatabaseFieldException(String msg) {

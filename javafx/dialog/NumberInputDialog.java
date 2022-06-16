@@ -1,4 +1,4 @@
-package VPLibrary.javafx.dialog;
+package vplibrary.javafx.dialog;
 
 import java.util.Optional;
 
@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyEvent;
-import VPLibrary.javafx.form.FormPredicate;
+import vplibrary.javafx.form.FormPredicate;
 
 public abstract class NumberInputDialog<T> extends TextInputDialog{
 	private ObservableList<FormPredicate<T>> predicates = FXCollections.observableArrayList();

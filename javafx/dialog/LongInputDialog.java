@@ -1,4 +1,4 @@
-package VPLibrary.javafx.dialog;
+package vplibrary.javafx.dialog;
 
 public class LongInputDialog extends NumberInputDialog<Long>{
 	public LongInputDialog(long i) {

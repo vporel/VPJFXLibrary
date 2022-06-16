@@ -1,4 +1,4 @@
-package VPLibrary.form.annotations;
+package vplibrary.form.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 
-import VPLibrary.form.SelectFieldOptions;
+import vplibrary.form.SelectFieldOptions;
 
 /**
  * Doit toujours �tre utilis�e avec Field

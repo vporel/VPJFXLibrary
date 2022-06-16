@@ -1,4 +1,4 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

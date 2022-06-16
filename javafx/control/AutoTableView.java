@@ -1,4 +1,4 @@
-package VPLibrary.javafx.control;
+package vplibrary.javafx.control;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -24,12 +24,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import VPLibrary.form.Field;
-import VPLibrary.form.Form;
-import VPLibrary.form.FormFromAnnotations;
-import VPLibrary.form.NullFormObjectException;
-import VPLibrary.hibernate.HasId;
-import VPLibrary.util.VPArray;
+import vplibrary.form.Field;
+import vplibrary.form.Form;
+import vplibrary.form.FormFromAnnotations;
+import vplibrary.form.NullFormObjectException;
+import vplibrary.hibernate.HasId;
+import vplibrary.util.VPArray;
 
 /**
  * Classe s'utilisant uniquement avec des entit�s, les colonnes d'ent�te sont les attributs de ces entit�s
@@ -56,7 +56,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	private Map<String, String> extraColumns = null;
 	
 	/**
-	 * Les champs de l'entit� qui doivent �tre affich�s doivent avoir l'annotation FieVPLibrary.porel.form.annotations
+	 * Les champs de l'entit� qui doivent �tre affich�s doivent avoir l'annotation Fievplibrary.porel.form.annotations
 	 * @param entityClass
 	 * @param items
 	 * @param actionBtnsCallbacks
@@ -66,7 +66,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	}
 	
 	/**
-	 * Les champs de l'entit� qui doivent �tre affich�s doivent avoir l'annotation FieVPLibrary.porel.form.annotations
+	 * Les champs de l'entit� qui doivent �tre affich�s doivent avoir l'annotation Fievplibrary.porel.form.annotations
 	 * @param entityClass
 	 * @param items
 	 * @param hiddenColumns
@@ -81,7 +81,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	}
 	
 	/**
-	 * Les champs de l'entit� qui doivent �tre affich�s doivent avoir l'annotation FieVPLibrary.porel.form.annotations
+	 * Les champs de l'entit� qui doivent �tre affich�s doivent avoir l'annotation Fievplibrary.porel.form.annotations
 	 * @param entityClass
 	 * @param items
 	 * @param hiddenColumns Les propri�t�s de l'entit� � ne pas afficher

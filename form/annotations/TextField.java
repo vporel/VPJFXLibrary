@@ -1,4 +1,4 @@
-package VPLibrary.form.annotations;
+package vplibrary.form.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target(FIELD)
 public @interface TextField {
 	
-	public String pattern() default VPLibrary.form.TextField.PATTERN;
+	public String pattern() default vplibrary.form.TextField.PATTERN;
 	public String defaultValue() default "";
 	
 	/**

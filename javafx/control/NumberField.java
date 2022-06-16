@@ -1,4 +1,4 @@
-package VPLibrary.javafx.control;
+package vplibrary.javafx.control;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;

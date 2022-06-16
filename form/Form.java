@@ -1,10 +1,10 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import VPLibrary.util.VPString;
+import vplibrary.util.VPString;
 
 
 public abstract class Form<Entity> {

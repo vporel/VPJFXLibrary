@@ -1,8 +1,8 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import VPLibrary.util.PasswordSecure;
+import vplibrary.util.PasswordSecure;
 
 public class PasswordField extends TextField{
 

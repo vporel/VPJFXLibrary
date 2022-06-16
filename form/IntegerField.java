@@ -1,4 +1,4 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 
 public class IntegerField extends NumberField<Integer>{

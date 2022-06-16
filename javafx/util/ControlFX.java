@@ -1,4 +1,4 @@
-package VPLibrary.javafx.util;
+package vplibrary.javafx.util;
 
 import java.util.regex.Pattern;
 

@@ -1,4 +1,4 @@
-package VPLibrary.util;
+package vplibrary.util;
 
 import java.util.List;
 

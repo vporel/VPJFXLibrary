@@ -1,4 +1,4 @@
-package VPLibrary.form.annotations;
+package vplibrary.form.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -17,7 +17,7 @@ public @interface PasswordField {
 	
 	public String hashFunction() default "";
 	
-	public String pattern() default VPLibrary.form.TextField.PATTERN;
+	public String pattern() default vplibrary.form.TextField.PATTERN;
 	
 	/**
 	 * Message to show if the value doesn't match the pattern

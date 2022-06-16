@@ -1,4 +1,4 @@
-package VPLibrary.util;
+package vplibrary.util;
 
 public class VPString{
 	/**

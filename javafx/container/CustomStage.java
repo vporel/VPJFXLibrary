@@ -1,4 +1,4 @@
-package VPLibrary.javafx.container;
+package vplibrary.javafx.container;
 
 import java.util.Optional;
 

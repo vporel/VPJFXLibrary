@@ -1,4 +1,4 @@
-package VPLibrary.form.annotations;
+package vplibrary.form.annotations;
 
 import javafx.collections.ObservableList;
 

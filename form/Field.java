@@ -1,4 +1,4 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 import java.io.Serializable;
 import java.util.HashMap;

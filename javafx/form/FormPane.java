@@ -1,4 +1,4 @@
-package VPLibrary.javafx.form;
+package vplibrary.javafx.form;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import VPLibrary.form.Form;
-import VPLibrary.hibernate.HasId;
+import vplibrary.form.Form;
+import vplibrary.hibernate.HasId;
 
 public class FormPane<Entity> extends GridPane{
 	private Form<Entity> form;

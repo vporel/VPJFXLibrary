@@ -1,4 +1,4 @@
-package VPLibrary.util;
+package vplibrary.util;
 
 /**
  * Contient des constantes d�finissant l'environnement dans lequel l'application est ex�cut�e

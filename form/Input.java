@@ -1,4 +1,4 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 public abstract class Input<T> extends Field<T>{
 

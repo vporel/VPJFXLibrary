@@ -1,4 +1,4 @@
-package VPLibrary.javafx.util;
+package vplibrary.javafx.util;
 
 import javafx.scene.Node;
 

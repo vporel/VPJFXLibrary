@@ -1,4 +1,4 @@
-package VPLibrary.hibernate;
+package vplibrary.hibernate;
 
 
 import java.util.ArrayList;

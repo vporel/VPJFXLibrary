@@ -1,4 +1,4 @@
-package VPLibrary.util;
+package vplibrary.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

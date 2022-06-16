@@ -1,4 +1,4 @@
-package VPLibrary.form;
+package vplibrary.form;
 
 public abstract class NumberField<T extends Number> extends Input<T> {
 	
