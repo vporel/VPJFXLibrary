@@ -14,12 +14,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import repositories.Repository;
-
 
 public class Hibernate {
 	private static SessionFactory sessionFactory;
 	private static Session session;
+	private static boolean initDone = false;
 	
 	/**
 	 * Méthode qui doit être appelé avant toute toute communication avec la base de données
@@ -40,6 +39,7 @@ public class Hibernate {
 			configuration.setProperties(hibernateProperties);
 			sessionFactory = configuration.buildSessionFactory(
 					new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build());
+			initDone = true;
 			return getSession();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -51,8 +51,21 @@ public class Hibernate {
 		
 		return null;
 	}
+	
+	private static void checkInitialisation() throws NoInitialisationException{
+		if(!initDone) {
+			throw new NoInitialisationException();
+		}
+	}
 
 	public static SessionFactory getSessionFactory() throws DBConnectionException{
+		
+		try {
+			checkInitialisation();
+		} catch (NoInitialisationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(sessionFactory != null)
 			return sessionFactory;
 		else
@@ -62,8 +75,15 @@ public class Hibernate {
 	/**
 	 * Session utilisant un cacheMode NORMAL
 	 * @return
+	 * @throws Exception 
 	 */
 	public static Session getSession() {
+		try {
+			checkInitialisation();
+		} catch (NoInitialisationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(session == null) {
 			try {
 				session = getSessionFactory().openSession();
@@ -92,6 +112,17 @@ public class Hibernate {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	/**
+	 * Excpetion lancée si une méthode est appelée sans l'initialisation d'hibernate
+	 * @author VPOREL-DEV
+	 *
+	 */
+	public static class NoInitialisationException extends Exception{
+		private NoInitialisationException() {
+			super("La méthode init doit être appelée avant toute autre méthode");
 		}
 	}
 	
