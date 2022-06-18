@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(FIELD)
-public @interface TextField {
+public @interface TextField{
 	
 	public String pattern() default vplibrary.form.TextField.PATTERN;
 	public String defaultValue() default "";

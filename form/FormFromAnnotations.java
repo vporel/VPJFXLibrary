@@ -74,6 +74,29 @@ public class FormFromAnnotations<Entity> extends Form<Entity>{
 					formField = FieldFactory.getField(field.getName(), field.getAnnotation(vplibrary.form.annotations.RelationField.class));
 				}
 				
+				if(formField == null) {
+					 if(field.isAnnotationPresent(vplibrary.form.annotations.Field.class)) {
+						formField = new Field<Object>(field.getAnnotation(vplibrary.form.annotations.Field.class).label(), field.getName()) {
+
+							@Override
+							public boolean test(Object value) {
+								// TODO Auto-generated method stub
+								return true;
+							}
+							
+						};
+					}else {
+						formField = new Field<Object>(field.getName(), field.getName()) {
+							@Override
+							public boolean test(Object value) {
+								// TODO Auto-generated method stub
+								return true;
+							}
+							
+						};
+					}
+				}
+				
 				if(formField != null) {
 					formField.setLabel(field.getAnnotation(vplibrary.form.annotations.Field.class).label());
 					formField.setTooltip(field.getAnnotation(vplibrary.form.annotations.Field.class).tooltip());
@@ -84,16 +107,6 @@ public class FormFromAnnotations<Entity> extends Form<Entity>{
 						formField.setRequired(!field.getAnnotation(JoinColumn.class).nullable());
 					}
 					
-				}else {
-					formField = new Field<Object>(field.getAnnotation(vplibrary.form.annotations.Field.class).label(), field.getName()) {
-
-						@Override
-						public boolean test(Object value) {
-							// TODO Auto-generated method stub
-							return true;
-						}
-						
-					};
 				}
 				this.addField(formField);
 			}
