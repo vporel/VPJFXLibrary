@@ -26,7 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import vplibrary.form.Field;
 import vplibrary.form.Form;
-import vplibrary.form.FormFromAnnotations;
+import vplibrary.form.EntityForm;
 import vplibrary.form.NullFormObjectException;
 import vplibrary.hibernate.HasId;
 import vplibrary.util.VPArray;
@@ -45,9 +45,8 @@ import vplibrary.util.VPArray;
  *
  * @param <Entity>
  */
-public class AutoTableView<Entity> extends TableView<Entity>{
+public class AutoTableView<Entity extends vplibrary.hibernate.Entity> extends TableView<Entity>{
 	private Class<Entity> entityClass;
-	private Form<Entity> virtualForm;
 	private Callback<TableCell, Button>[] actionBtnsCallbacks;
 	private ObservableList<Entity> actualList;
 	private ObservableMap<String, Predicate<Entity>> predicates;
@@ -96,13 +95,6 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 		this.actualList = items;
 		this.filteredList = new FilteredList<>(actualList);
 		predicates = FXCollections.observableHashMap();
-		try {
-			virtualForm = new FormFromAnnotations<Entity>((Entity) entityClass.getDeclaredConstructor().newInstance());
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullFormObjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		createColumns();
 	    this.setItems(filteredList);
 	    filteredList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
@@ -140,7 +132,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	}
 	
 	public void createColumns() {
-		ArrayList<Field<?>> fields = virtualForm.getFields();
+		ArrayList<Field<?>> fields = vplibrary.hibernate.Entity.getFields(entityClass);
 		if(HasId.class.isAssignableFrom(entityClass) && (hiddenColumns == null || (hiddenColumns != null  && !VPArray.in(hiddenColumns, "id")))) {
 			TableColumn<Entity, Integer> idCol = new TableColumn<Entity, Integer>("#Id");
 			idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -199,18 +191,18 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	 * @param fontAwesomeLiteral Nom de l'icon dans Font Awesome (cette icon aura la classe 'icon')
 	 * @return
 	 */
-	public static Callback<TableCell, Button> createButtonCallback(String eventName, String fontAwesomeLiteral) {
-		return createButtonCallback(eventName, "", fontAwesomeLiteral);
+	public static Callback<TableCell, Button> createActionButtonCallback(String eventName, String fontAwesomeLiteral) {
+		return createActionButtonCallback(eventName, "", fontAwesomeLiteral);
 	}
 	
 	/**
 	 * Le graphic(icon) est gï¿½nï¿½rï¿½ ï¿½ partir de la librairie Ikonli
-	 * @param eventName
+	 * @param eventName Le nom de l"évenement lorsqu'on clique sur le bouton
 	 * @param text
 	 * @param fontAwesomeLiteral Nom de l'icon dans Font Awesome (cette icon aura la classe 'icon')
 	 * @return
 	 */
-	public static Callback<TableCell, Button> createButtonCallback(String eventName, String text, String fontAwesomeLiteral) {
+	public static Callback<TableCell, Button> createActionButtonCallback(String eventName, String text, String fontAwesomeLiteral) {
 		Callback<TableCell, Button> callback = (tableCell) -> {
 			Button btn = new Button();
 			btn.setText(text);
@@ -228,7 +220,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 	
 	
 	public static class ButtonActionEvent extends Event{
-		public static EventType<ButtonActionEvent> BUTTON_ACTION_EVENT_TYPE = new EventType<ButtonActionEvent>("DETAIL_BUTTON_ACTION_EVENT");
+		public static EventType<ButtonActionEvent> EVENT_TYPE = new EventType<ButtonActionEvent>("BUTTON_ACTION_EVENT");
 		
 		private Object object;
 		/**
@@ -237,7 +229,7 @@ public class AutoTableView<Entity> extends TableView<Entity>{
 		private String name;
 		
 		public ButtonActionEvent(Object object, String name) {
-			super(BUTTON_ACTION_EVENT_TYPE);
+			super(EVENT_TYPE);
 			this.object = object;
 			this.name = name;
 		}

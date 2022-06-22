@@ -1,8 +1,12 @@
 package vplibrary.form;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * 
@@ -12,107 +16,81 @@ import java.util.List;
  */
 
 public class FieldFactory {
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.TextField fieldAnnotation){
-		TextField field = new TextField("", name);
-		field.setDefaultValue(fieldAnnotation.defaultValue());
-		field.setPattern(fieldAnnotation.pattern());
-		field.setErrorMessage(fieldAnnotation.errorMessage());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.PasswordField fieldAnnotation){
-		PasswordField field = new PasswordField("", name, fieldAnnotation.hashFunction());
-		field.setPattern(fieldAnnotation.pattern());
-		field.setErrorMessage(fieldAnnotation.errorMessage());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.TextAreaField fieldAnnotation){
-		return new TextArea("", name);
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.DateField fieldAnnotation){
-		DateField field = new DateField("", name);
-		field.setDefaultValue(fieldAnnotation.defaultValue());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.FileField fieldAnnotation){
-		return new FileField("", name);
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.EmailField fieldAnnotation){
-		EmailField field = new EmailField("", name);
-		field.setPattern(fieldAnnotation.pattern());
-		field.setErrorMessage(fieldAnnotation.errorMessage());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.IntegerField fieldAnnotation){
-		Input<?> field = new IntegerField("", name, fieldAnnotation.min(), fieldAnnotation.max());
-		field.setDefaultValue(fieldAnnotation.defaultValue());
-		field.setErrorMessage(fieldAnnotation.errorMessage());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.LongField fieldAnnotation){
-		Input<?> field = new LongField("", name, fieldAnnotation.min(), fieldAnnotation.max());
-		field.setDefaultValue(fieldAnnotation.defaultValue());
-		field.setErrorMessage(fieldAnnotation.errorMessage());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.DoubleField fieldAnnotation){
-		Input<?> field = new DoubleField("", name, fieldAnnotation.min(), fieldAnnotation.max());
-		field.setDefaultValue(fieldAnnotation.defaultValue());
-		field.setErrorMessage(fieldAnnotation.errorMessage());
-		return field;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.SelectField fieldAnnotation) throws NoOptionException{
-		Class<?> optionsClass = fieldAnnotation.optionsClass();
-		Method m;
-		try {
-			m = optionsClass.getMethod("getOptions");// From the interface SelectFieldOptions
-			List<Object> options = (List<Object>) m.invoke(null);
-			if(options == null) {
-				throw new NoOptionException("Aucune option d�finie pour le champ select");
+	public static Field<?> getField(String name, Annotation annotation) throws NoOptionException{
+		Field<?> field = null;
+		if(annotation instanceof vplibrary.form.annotations.TextField){
+			vplibrary.form.annotations.TextField fieldAnnotation = (vplibrary.form.annotations.TextField) annotation;
+			field = new TextField(fieldAnnotation.label(), name)
+				.setPattern(fieldAnnotation.pattern())
+				.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.PasswordField){
+			vplibrary.form.annotations.PasswordField fieldAnnotation = (vplibrary.form.annotations.PasswordField) annotation;
+			field = new PasswordField(fieldAnnotation.label(), name, fieldAnnotation.hashFunction())
+				.setPattern(fieldAnnotation.pattern())
+				.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.TextAreaField){
+			vplibrary.form.annotations.TextAreaField fieldAnnotation = (vplibrary.form.annotations.TextAreaField) annotation;
+			field = new TextAreaField(fieldAnnotation.label(), name)
+					.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.DateField){
+			vplibrary.form.annotations.DateField fieldAnnotation = (vplibrary.form.annotations.DateField) annotation;
+			field = new DateField(fieldAnnotation.label(), name)
+					.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.FileField){
+			vplibrary.form.annotations.FileField fieldAnnotation = (vplibrary.form.annotations.FileField) annotation;
+			field = new FileField(fieldAnnotation.label(), name, fieldAnnotation.destFolder(), fieldAnnotation.extensions())
+					.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.EmailField){
+			vplibrary.form.annotations.EmailField fieldAnnotation = (vplibrary.form.annotations.EmailField) annotation;
+			field = new EmailField(fieldAnnotation.label(), name)
+				.setPattern(fieldAnnotation.pattern())
+				.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.IntegerField){
+			vplibrary.form.annotations.IntegerField fieldAnnotation = (vplibrary.form.annotations.IntegerField) annotation;
+			field = new IntegerField(fieldAnnotation.label(), name, fieldAnnotation.min(), fieldAnnotation.max())
+				.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.LongField){
+			vplibrary.form.annotations.LongField fieldAnnotation = (vplibrary.form.annotations.LongField) annotation;
+			field = new LongField(fieldAnnotation.label(), name, fieldAnnotation.min(), fieldAnnotation.max())
+				.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.DoubleField){
+			vplibrary.form.annotations.DoubleField fieldAnnotation = (vplibrary.form.annotations.DoubleField) annotation;
+			field = new DoubleField(fieldAnnotation.label(), name, fieldAnnotation.min(), fieldAnnotation.max())
+				.setTooltip(fieldAnnotation.tooltip());
+		}else if(annotation instanceof vplibrary.form.annotations.SelectField){
+			vplibrary.form.annotations.SelectField fieldAnnotation = (vplibrary.form.annotations.SelectField) annotation;
+			Class<?> optionsClass = fieldAnnotation.optionsClass();
+			Method m;
+			try {
+				m = optionsClass.getMethod("getOptions");// From the interface SelectFieldOptions
+				ObservableList<Object> options = FXCollections.observableArrayList((List<Object>) m.invoke(null));
+				if(options == null) {
+					throw new NoOptionException("Aucune option d�finie pour le champ select");
+				}
+
+				field = new SelectField(fieldAnnotation.label(), name,options)
+						.setTooltip(fieldAnnotation.tooltip());
+				
+			} catch (NoSuchMethodException|SecurityException|IllegalAccessException|IllegalArgumentException|InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			return new Select("", name, options);
-			
-		} catch (NoSuchMethodException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}else if(annotation instanceof vplibrary.form.annotations.SelectField){
+			vplibrary.form.annotations.RelationField fieldAnnotation = (vplibrary.form.annotations.RelationField) annotation;
+			Class<?> targetEntity =  fieldAnnotation.targetEntity();
+			Method getElements;
+			try {
+				getElements = targetEntity.getMethod("getElements");
+				field = new SelectField("", name, FXCollections.observableArrayList((List<Object>) getElements.invoke(targetEntity.getConstructor().newInstance())))
+					.setEditable(fieldAnnotation.editable())
+					.setTooltip(fieldAnnotation.tooltip());
+				
+			} catch (NoSuchMethodException|SecurityException|IllegalAccessException|IllegalArgumentException|InvocationTargetException|InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return null;
-	}
-	
-	public static Field<?> getField(String name, vplibrary.form.annotations.RelationField fieldAnnotation){
-		Class<?> targetEntity =  fieldAnnotation.targetEntity();
-		Method getElements;
-		try {
-			getElements = targetEntity.getMethod("getElements");
-			Select field = new Select("", name, (List<Object>) getElements.invoke(targetEntity.getConstructor().newInstance()));
-			field.setEditable(fieldAnnotation.editable());
-			return field;
-			
-		} catch (NoSuchMethodException|SecurityException|IllegalAccessException|IllegalArgumentException|InvocationTargetException|InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		
+		return field;
 	}
 }

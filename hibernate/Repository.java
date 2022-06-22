@@ -14,8 +14,6 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
-import vplibrary.hibernate.Hibernate.NoInitialisationException;
-
 public abstract class Repository<T extends Entity> {
 	protected static Session session;
 	
@@ -72,27 +70,25 @@ public abstract class Repository<T extends Entity> {
 		}
 		try {
 			return (T) session.createQuery(query).getResultList().get(0);
-		}catch(NoResultException e) {
+		}catch(NoResultException|IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
 	
-	public List<T> findBy(String propertyName, Object value){
-		return findBy(propertyName, value, null);
+	public List<T> simpleFindBy(String propertyName, Object value){
+		return simpleFindBy(propertyName, value, null);
 	}
 	
-	public List<T> findBy(String propertyName, Object value, Order order){
-		return findBy(propertyName, value, order, Integer.MAX_VALUE);
+	public List<T> simpleFindBy(String propertyName, Object value, String order){
+		return simpleFindBy(propertyName, value, order, Integer.MAX_VALUE);
 	}
 	
-	public List<T> findBy(String propertyName, Object value, Order order, int maxResults){
+	public List<T> simpleFindBy(String propertyName, Object value, String order, int maxResults){
 		if(order != null) {
-			Order[] orders = {order};
-			return findBy(new HashMap<>() {{put(propertyName, value);}}, orders, maxResults);
-		}else{
-			Order[] orders = {};
-			return findBy(new HashMap<>() {{put(propertyName, value);}}, orders, maxResults);
+			ArrayList<String> orders = new ArrayList<>(){{add(order);}};
+			return findBy(new HashMap<>(){{put(propertyName, value);}}, orders, maxResults);
 		}
+		return findBy(new HashMap<>() {{put(propertyName, value);}}, null, maxResults);
 	}
 	
 	/**
@@ -109,7 +105,7 @@ public abstract class Repository<T extends Entity> {
 	 * @param List<Order> order
 	 * @return List<T>
 	 */
-	public List<T> findBy(Map<String, ?> criteria, Order[] orders){
+	public List<T> findBy(Map<String, ?> criteria, ArrayList<String> orders){
 		return findBy(criteria, orders, Integer.MAX_VALUE);
 	}
 	/**
@@ -118,7 +114,7 @@ public abstract class Repository<T extends Entity> {
 	 * @param maxResults
 	 * @return
 	 */
-	public List<T> findBy(Map<String, ?> criteria, Order[] orders, int maxResults){
+	public List<T> findBy(Map<String, ?> criteria, ArrayList<String> orders, int maxResults){
 		return findBy(criteria, orders, maxResults, 0);
 	}
 	/**
@@ -129,20 +125,27 @@ public abstract class Repository<T extends Entity> {
 	 * @param firstResult
 	 * @return
 	 */
-	public List<T> findBy(Map<String, ?> criteria, Order[] orders, int maxResults, int firstResult) {
+	public List<T> findBy(Map<String, ?> criteria, ArrayList<String> orders, int maxResults, int firstResult) {
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<T> query = builder.createQuery(getEntityClass());
 		Root<T> root = query.from(getEntityClass());
 		query.select(root);
-		criteria.forEach((key, value) -> {
-			query.where(builder.equal(root.get(key), value));
-		});
-		if(orders != null) {
-			for(Order o: orders) {  // Order
-				if(o.isAscending())
-					query.orderBy(builder.asc(root.get(o.getPropertyName())));
-				else
-					query.orderBy(builder.desc(root.get(o.getPropertyName())));
+		if(criteria != null) {
+			criteria.forEach((key, value) -> {
+				query.where(builder.equal(root.get(key), value));
+			});
+		}
+		if(orders == null) {
+			orders = new ArrayList<>();
+			String naturalOrderField = Entity.getEntityNaturalOrderField(getEntityClass());
+			if(!orders.contains(naturalOrderField))
+				orders.add(naturalOrderField);
+		}
+		for(String o: orders) {  // Order
+			if(!o.startsWith("-"))
+				query.orderBy(builder.asc(root.get(o)));
+			else {
+				query.orderBy(builder.desc(root.get(o.substring(1))));
 			}
 		}
 		
@@ -153,14 +156,8 @@ public abstract class Repository<T extends Entity> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
-		String query = "FROM "+getEntityClass().getName();
-		try {
-			return (List<T>) session.createQuery(query).getResultList();
-		}catch(NoResultException e) {
-			return new ArrayList<T>();
-		}
+		return findBy(null);
 	}
 	
 }

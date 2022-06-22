@@ -9,9 +9,9 @@ public class LongField extends NumberField<Long> {
    
    public LongField() {
 		super();
-	}
+   }
    
-   public Long getValue() {
-	   return (this.getText() == null || this.getText().trim() =="") ? 0l : Long.parseLong(this.getText());
+   protected Long castString(String str) {
+   		return Long.parseLong(str);
    }
 }

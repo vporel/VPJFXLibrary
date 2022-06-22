@@ -1,32 +1,26 @@
 package vplibrary.javafx.form;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import vplibrary.form.DateField;
 import vplibrary.form.DoubleField;
 import vplibrary.form.Field;
-import vplibrary.form.Input;
+import vplibrary.form.InputField;
 import vplibrary.form.IntegerField;
 import vplibrary.form.LongField;
+import vplibrary.form.NumberField;
 import vplibrary.form.Option;
-import vplibrary.form.Select;
-import vplibrary.form.TextArea;
+import vplibrary.form.SelectField;
+import vplibrary.form.TextAreaField;
 import vplibrary.javafx.control.DateTimePicker;
-import vplibrary.javafx.control.NumberField;
 import vplibrary.javafx.util.ControlFX;
-import vplibrary.util.VPString;
 
 public class FormControl{
 	private Field<?> field;
@@ -37,71 +31,13 @@ public class FormControl{
 	private Text errorText = new Text("");
 	private Label label;
 	private boolean showLabel;
-	private ObservableList<FormPredicate<?>> predicates = FXCollections.observableArrayList();
 	
-	public FormControl(Field<?> field, Object object, boolean showLabel) {
+	public FormControl(Field<?> field, boolean showLabel) {
 		this.field = field;
-		createControl();
-		control.setTooltip(new Tooltip(field.getTooltip()));
-		this.showLabel = showLabel;
 		
-		newValueFromObject(object);
-
-		label = new Label(field.getLabel());
-		label.getStyleClass().add("form-label");
-		this.control.getStyleClass().add("form-control");
-		errorText.getStyleClass().addAll("error-text", "text-bad");
-		
-		if(field instanceof Input) {
-			TextInputControl inputControl = (TextInputControl) control;
-			errorText.textProperty().bind(Bindings.createStringBinding(() -> {
-				if(field.isRequired() && inputControl.getText().isBlank()) {
-					return "Remplissez ce champ";
-				}
-				if(
-					field instanceof vplibrary.form.NumberField && ((vplibrary.form.NumberField) field).test(((NumberField) control).getValue())
-					|| field instanceof vplibrary.form.TextField && ((vplibrary.form.TextField) field).test(((TextField) control).getText())
-					|| field instanceof vplibrary.form.TextArea
-				) {
-					if(!(field instanceof vplibrary.form.TextArea)) {
-						for(FormPredicate predicate:predicates) {
-							if(
-								(field instanceof vplibrary.form.NumberField && !predicate.test(((NumberField) control).getValue()))
-								|| (field instanceof vplibrary.form.TextField && !predicate.test(((TextField) control).getText()))
-							)
-								return predicate.getErrorMessage();
-						}
-					}
-					return "";
-				}else
-					return field.getErrorMessage();
-			}, inputControl.textProperty(), predicates));
-		}else if(control instanceof ComboBox) {
-			bindAutoCompletion();
-			errorText.textProperty().bind(Bindings.createStringBinding(() -> {
-				if(field.isRequired() && ((ComboBox<Object>) control).getSelectionModel().getSelectedItem() == null) {
-					return "Choisissez un ï¿½lï¿½ment";
-				}
-				if(((Select) field).test(((ComboBox<Object>) control).getSelectionModel().getSelectedItem())) {
-					for(FormPredicate predicate:predicates) {
-						if(
-							!predicate.test(((Select) field).test(((ComboBox<Object>) control).getSelectionModel().getSelectedItem()))
-						)
-							return predicate.getErrorMessage();
-					}
-					return "";
-				}else
-					return field.getErrorMessage();
-			}, ((ComboBox<Object>) control).getSelectionModel().selectedItemProperty(), predicates));
-		}
-	}
-	public FormControl(Field<?> field, Object object) {
-		this(field, object, true);
-	}
-	
-	private void createControl() {
-		control = new TextField(); // Default if field instanceof TextLine
-		if(field instanceof TextArea) {
+		//Création du control
+		control = new TextField(); // Contrôle par défaut
+		if(field instanceof TextAreaField) {
 			control = new javafx.scene.control.TextArea();
 		}else if(field instanceof vplibrary.form.PasswordField) {
 			control = new PasswordField();
@@ -113,10 +49,10 @@ public class FormControl{
 			control = new vplibrary.javafx.control.DoubleField();
 		}else if(field instanceof DateField) {
 			control = new DateTimePicker();
-		}else if(field instanceof Select) {
+		}else if(field instanceof SelectField) {
 			control = new ComboBox<Option>();
 			ComboBox<Object> comboBoxControl = (ComboBox<Object>) control;
-			List<Object> list = ((Select) field).getOptions();
+			List<Object> list = ((SelectField) field).getOptions();
 			if(list instanceof ObservableList)
 				comboBoxControl.setItems((ObservableList<Object>) list);
 			else 
@@ -125,9 +61,49 @@ public class FormControl{
 			ControlFX.handleEditableComboBox(comboBoxControl);
 			
 		}
+		
+		control.setTooltip(new Tooltip(field.getTooltip()));
+		this.showLabel = showLabel;
+
+		label = new Label(field.getLabel());
+		label.getStyleClass().add("form-label");
+		this.control.getStyleClass().add("form-control");
+		errorText.getStyleClass().addAll("error-text", "text-bad");
+		
+		if(field instanceof NumberField) {
+			vplibrary.javafx.control.NumberField<Number> inputControl = (vplibrary.javafx.control.NumberField<Number>) control;
+			if(((NumberField<Number>) field).getValue() != null) {
+				inputControl.setValue(((NumberField<Number>) field).getValue());
+			}
+			((NumberField<Number>) field).valueProperty().bindBidirectional(inputControl.valueProperty());
+			inputControl.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+				//Affichage de l"erreur uniquement lorsque l'utilisateur commence à modifier le champ
+	            if(!errorText.textProperty().isBound())
+	        		errorText.textProperty().bind(field.errorProperty());
+		    });
+		}else if(field instanceof InputField) {
+			TextInputControl inputControl = (TextInputControl) control;
+			if(((InputField<String>) field).getValue() != null) {
+				inputControl.setText(((InputField<String>) field).getValue());
+			}
+			((InputField<String>) field).valueProperty().bindBidirectional(inputControl.textProperty());
+			inputControl.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+				//Affichage de l"erreur uniquement lorsque l'utilisateur commence à modifier le champ
+	            if(!errorText.textProperty().isBound())
+	        		errorText.textProperty().bind(field.errorProperty());
+		    });
+		}else if(control instanceof ComboBox) {
+			bindAutoCompletion();
+			((SelectField) field).valueProperty().bind( ((ComboBox<Object>) control).getSelectionModel().selectedItemProperty());
+			((ComboBox<Object>) control).getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+				//Affichage de l"erreur uniquement lorsque l'utilisateur commence à modifier le champ
+	            if(!errorText.textProperty().isBound())
+	        		errorText.textProperty().bind(field.errorProperty());
+		    });
+		}
 	}
-	public void addPredicate(FormPredicate<?> predicate) {
-		predicates.add(predicate);
+	public FormControl(Field<?> field) {
+		this(field, true);
 	}
 	public Field<?> getField() {
 		return field;
@@ -138,26 +114,8 @@ public class FormControl{
 	}
 	
 	public boolean isValid() {
-		return errorText.getText().isEmpty();
+		return field.isValid();
 	}
-	
-	public void reset() {
-		if(control instanceof TextInputControl && !(control instanceof PasswordField) && field.getDefaultValue() != null) {
-			((TextInputControl) control).setText(String.valueOf(field.getDefaultValue()));
-		}else if(control instanceof ComboBox && ((ComboBox<Object>) control).getItems().size() > 0 && field.getDefaultValue() != null) {
-				((ComboBox<Object>) control).setValue(field.getDefaultValue());
-		}
-	}
-	
-	public void empty() {
-		if(control instanceof TextInputControl) {
-			((TextInputControl) control).setText("");
-		}else if(control instanceof ComboBox) {
-			((ComboBox) control).getSelectionModel().clearSelection();
-			((ComboBox) control).getEditor().setText("");
-		}
-	}
-
 	
 	public Control getControl() {
 		return control;
@@ -167,7 +125,7 @@ public class FormControl{
 		return errorText;
 	}
 
-	
+	/*
 	public void newValueFromObject(Object object) {
 		Object value = field.getDefaultValue();
 		if(object != null) {
@@ -203,23 +161,13 @@ public class FormControl{
 		}
 		
 	}
-	
+	*/
 	public Object getValue() {
-		if(control instanceof NumberField) { // The test for NumberField is the first because NumberField extends from TextField
-			return ((NumberField<?>) control).getValue();
-		}else if(control instanceof TextInputControl) { // TextField, TextArea, PasswordField
-			return ((TextInputControl) control).getText();
-		}else if(control instanceof ComboBox){
-			return ((ComboBox<Object>) control).getSelectionModel().getSelectedItem();
-		}else if(control instanceof DateTimePicker){
-			return ((DateTimePicker) control).getDateTimeValue();
-		}else {
-			return null;
-		}
+		return field.getValue();
 	}
 
-	public Pane getPane(Orientation orientation) {
-		Pane pane = (orientation == Orientation.HORIZONTAL) ? new HBox(5) : new VBox(5);
+	public Pane getPane() {
+		Pane pane = new VBox(5);
 		VBox controlLayout = new VBox();
 		control.setPrefWidth(Double.MAX_VALUE);
 		controlLayout.getChildren().add(control);

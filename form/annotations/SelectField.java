@@ -10,13 +10,19 @@ import java.lang.annotation.Target;
 import vplibrary.form.SelectFieldOptions;
 
 /**
- * Doit toujours ï¿½tre utilisï¿½e avec Field
  * @author VPOREL-DEV
  *
  */
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface SelectField {	
+	public String label();
+	
+	/**
+	 * Texte à afficher pour aider l'utilisateur à comprendre à quoi sert le champ
+	 * @return
+	 */
+	public String tooltip() default "";
 	/**
 	 * This class must provide a method called List<Option> getOptions()
 	 * @return

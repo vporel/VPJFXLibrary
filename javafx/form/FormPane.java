@@ -3,6 +3,9 @@ package vplibrary.javafx.form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -15,56 +18,83 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import vplibrary.form.Form;
 import vplibrary.hibernate.HasId;
+import vplibrary.javafx.util.VPNode;
+import vplibrary.util.Callback;
+import vplibrary.util.Predicate;
+import vplibrary.util.SimpleCallable;
+import vplibrary.util.SimpleCallback;
 
-public class FormPane<Entity> extends GridPane{
-	private Form<Entity> form;
+public class FormPane extends VBox{
+	private Form form;
+	private Pane controlsPane;
 	private int columnsCount;
 	private Orientation orientation;
 	private	List<FormControl> formControls = new ArrayList<>();
 	
 	private Button resetButton = new Button("Reset");
 	private Button submitButton = new Button("Submit");
-	private Label caption = new Label("Form");
-	private final String defaultErrorText = "Vï¿½rifiez tous les champs";
-	private Text errorText = new Text("");
-	
-	private GridPane elementsGrid;
 	private HBox btnsLayout;
+	private Label errorLabel = new Label("");
 	
-	private int row, column, elementsGridRow, elementsGridColumn;
+	private SimpleCallable onSubmit;
+	private SimpleCallback<FormEvent> onReset;
 	
-	private ObservableList<FormPredicate<Entity>> predicates = FXCollections.observableArrayList();
 	
-	public FormPane(Form<Entity> form) {
+	public FormPane(Form form) {
 		this(form, 1);
 	}
 	
-	public FormPane(Form<Entity> form, int columnsCount) {
+	public FormPane(Form form, int columnsCount) {
 		this(form, columnsCount, Orientation.VERTICAL);
 	}
 	
-	public FormPane(Form<Entity> form, int columnsCount, Orientation orientation) {
+	public FormPane(Form form, int columnsCount, Orientation orientation) {
 		this.form = form;
 		this.columnsCount = columnsCount;
 		this.orientation = orientation;
-		this.setHgap(5);
-		this.setVgap(5);
-		this.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
+		this.setPrefSize(Pane.USE_COMPUTED_SIZE, Pane.USE_COMPUTED_SIZE);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		this.controlsPane = (orientation == Orientation.VERTICAL) ? new HBox(3) : new VBox(3);
+		this.controlsPane.setPrefSize(Pane.USE_COMPUTED_SIZE, Pane.USE_COMPUTED_SIZE);
+		this.controlsPane.setMaxWidth(Double.MAX_VALUE);
 		
 		btnsLayout = new HBox();
 		btnsLayout.setAlignment(Pos.CENTER_RIGHT);
 		btnsLayout.setSpacing(5);
 		
-		createFormControls();
-		elementsGrid = new GridPane(); //Avant la construction
-		elementsGrid.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
-		elementsGrid.setHgap(5);
-		elementsGrid.setVgap(5);
-		elementsGrid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		//Création des contrôles en fonction des champs du formulaire
+		form.getFields().forEach((fielName, field) -> {
+			formControls.add(new FormControl(field));
+		});
+		
+		resetButton.setOnAction(e -> {
+			FormEvent event = new FormEvent();
+			if(onReset != null)
+				onReset.call(event);
+			if(!event.isCanceled()) {
+				form.reset();
+			}
+			
+		});
+		submitButton.setOnAction(e -> {
+
+			if(getForm().isValid()) {
+				if(onSubmit != null)
+					try {
+						onSubmit.call();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
+			
+		});
+		
 		build();
 		addClasses();
 		
@@ -72,29 +102,8 @@ public class FormPane<Entity> extends GridPane{
 		
 	}
 	
-	/**
-	 * Le prï¿½dicat est testï¿½ lors de la vï¿½rification du formulaire tout entier
-	 * La vï¿½rification se fait sur l'objet et non sur des attributs particuliï¿½s
-	 * @param predicate
-	 */
-	public void addPredicate(FormPredicate<Entity> predicate) {
-		predicates.add(predicate);
-	}
-	
-	public void addPredicate(String controlName, FormPredicate<?> predicate) throws NoSuchControlException {
-		getFormControl(controlName).addPredicate(predicate);
-	}
-	
-	public Form<?> getForm() {
+	public Form getForm() {
 		return form;
-	}
-	
-	/**
-	 * Appelle la methode getObject du formulaire
-	 * @return
-	 */
-	public Entity getObject() {
-		return form.getObject();
 	}
 	
 	public FormControl getFormControl(String name) throws NoSuchControlException {
@@ -128,58 +137,12 @@ public class FormPane<Entity> extends GridPane{
 	public Button getSubmitButton() {
 		return submitButton;
 	}
-
-	public Label getCaption() {
-		return caption;
-	}
-
-	public Text getErrorText() {
-		return errorText;
-	}
-		
-	/**
-	 * Retorune les valeurs des diffï¿½rents controls, qu'elles soient valides ou pas
-	 * @return HashMap
-	 */
-	public HashMap<String, Object> getData(){
-		
-		HashMap<String, Object> data = new HashMap<>();
-		for(FormControl formControl: formControls) {
-			data.put(formControl.getField().getName(), formControl.getValue());
-		}
-		return data;
-		
+	public Label getErrorTextLabel() {
+		return errorLabel;
 	}
 	
-	public void setObject(Entity object) {
-		empty();
-		form.setObject(object);
-		for(FormControl fc:formControls) {
-			fc.newValueFromObject(object);
-		}
-	}
-	
-	/**
-	 * If the returned value is false, it propably means some fields in the form are not valid
-	 * @return boolean
-	 */
-	public boolean updateObject() {
-		if(this.isValid()) {
-			form.updateObject(getData());
-			return true;
-		}else {
-			return false;
-		}
-	}
-	
-	public void showButtons() {
-		btnsLayout.setVisible(true);
-		btnsLayout.setManaged(true);
-	}
-	
-	public void hideButtons() {
-		btnsLayout.setVisible(false);
-		btnsLayout.setManaged(false);
+	public Pane getButtonsLayout() {
+		return btnsLayout;
 	}
 	
 	public void addButtons(boolean before, Button ...btns) {
@@ -196,144 +159,68 @@ public class FormPane<Entity> extends GridPane{
 	}
 	
 	/**
-	 * Le test est d'abord fait sur les champs individuellement
-	 * Ensuite le formulaire tout entier (gï¿½nï¿½ralement pour s'assurer que les champs mis ensemble ont des informations cohï¿½rentes)
-	 * Enfin on teste les autres prï¿½dicats ajoutï¿½s
-	 * @return true si les donnï¿½es sont valides, false sinon
+	 * 
+	 * @param onSubmit
 	 */
-	public boolean isValid() {
-		boolean valid = true;
-		for(FormControl formControl: formControls) {
-			if(!formControl.isValid()) {
-				valid = false;
-				break;
-			}
-		}
-
-		Entity testObject = form.newObjectClassInstance();
-		if(form.getObject() instanceof HasId && ((HasId) form.getObject()).getId() != null) {
-			((HasId) testObject).setId(((HasId) form.getObject()).getId());
-		}
-		form.updateObject(getData(), testObject);
-		
-		if(valid) {
-			if(!form.isValid(testObject)) {
-				valid = false;
-				errorText.setText(form.getErrorMessage());
-			}
-			if(valid) {
-				for(FormPredicate<Entity> predicate:predicates) {
-					if(!predicate.test(testObject)) {
-						valid = false;
-						errorText.setText(predicate.getErrorMessage());
-						break;
-					}
-				}
-			}
-		}else {
-			errorText.setText(defaultErrorText);
-		}
-		
-		if(valid)
-			errorText.setVisible(false);
-		else
-			errorText.setVisible(true);
-		return valid;
+	public void setOnSubmit(SimpleCallable onSubmit) {
+		this.onSubmit = onSubmit;
 	}
-
-	private void createFormControls() {
-		form.getFields().forEach(field -> {
-			formControls.add(new FormControl(field, form.getObject()));
-		});
-	}
-
-	public void listAdd(String listName, Object object) throws Exception{
-		for(FormControl fc:formControls) {
-			if(fc.getField().getName().equals(listName)) {
-				try {
-					fc.add(object);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return;
-			}
-		}
-		throw new Exception("Liste ["+listName+"] non trouvï¿½e");
-	}
-	
-	public void reset() {
-		for(FormControl fc:formControls) {
-			fc.reset();
-		}
-	}
-	public void empty() {
-		for(FormControl fc:formControls) {
-			fc.empty();
-		}
+	public void setOnReset(SimpleCallback<FormEvent> onReset) {
+		this.onReset = onReset;
 	}
 	
 	private void build() {
-		//Add caption
-		this.add(caption, 0, 0);
-		caption.setPrefWidth(Double.MAX_VALUE);
-		
-		caption.managedProperty().bind(caption.visibleProperty());
-		
-		row = 1;
-		column = 0;
-		/**
-		 * Create form body
-		 * If there is only one object, a simple form is created
-		 * But if there is more than one, we use a tableView
-		 */
-		this.add(elementsGrid, column, row);
-		row++;
-		elementsGridRow = 0;
-		elementsGridColumn = 0;
-		for(FormControl control : formControls) {
-			elementsGrid.add(control.getPane(orientation), elementsGridColumn, elementsGridRow);
-			elementsGridColumn++;
-			if(elementsGridColumn >= this.columnsCount) { // Si on est ï¿½ la fin de la ligne, on passe ï¿½ la premiere colonne de la ligne suivante
-				elementsGridColumn = 0;
-				elementsGridRow++;
+		int elementsCountPerBox = Double.valueOf(this.formControls.size() / this.columnsCount).intValue(); // si orientation = Vertical
+		if(this.orientation == Orientation.HORIZONTAL) {
+			elementsCountPerBox = this.columnsCount;
+		}
+		Pane currentBox = null;
+		for(int i = 0;i<formControls.size();i++) {
+			FormControl fc = formControls.get(i);
+			if(i % elementsCountPerBox == 0) {
+				if(currentBox != null) {
+					controlsPane.getChildren().add(currentBox);
+				}
+				currentBox = this.orientation == Orientation.VERTICAL ? new VBox(3) : new HBox(3);
+				if(currentBox instanceof VBox) {
+					currentBox.minWidthProperty().bind(Bindings.createDoubleBinding(() -> {
+						return controlsPane.getWidth()/columnsCount;
+					}, controlsPane.widthProperty()));
+				}else {
+					currentBox.setMaxWidth(Double.MAX_VALUE);
+				}
+			}
+			currentBox.getChildren().add(fc.getPane());
+			if((i+1) % elementsCountPerBox == 0) {
+				controlsPane.getChildren().add(currentBox);
 			}
 		}		
-		//Constraints
-		ColumnConstraints columnContraints = new ColumnConstraints();
-		columnContraints.setPercentWidth(100d/columnsCount);
-		for(int j = 0;j<columnsCount;j++)
-			elementsGrid.getColumnConstraints().add(j, columnContraints);
 		
-		//Put errorText
-		row++;
-		column = 0;
-		this.add(errorText, column, row);
-		GridPane.setHalignment(errorText, HPos.CENTER);
-		GridPane.setValignment(errorText, VPos.CENTER);
-		errorText.managedProperty().bind(errorText.visibleProperty());
-		errorText.setVisible(false);
-		//Create form buttons
-		row++;
-		column = 0;
-		
+		errorLabel.managedProperty().bind(errorLabel.visibleProperty());
+		errorLabel.textProperty().bind(form.errorProperty());
+		errorLabel.visibleProperty().bind(form.validProperty());
 		
 		btnsLayout.getChildren().addAll(resetButton, submitButton);
-		this.add(btnsLayout, column, row);
-		GridPane.setHalignment(btnsLayout, HPos.RIGHT);
-		GridPane.setValignment(btnsLayout, VPos.CENTER);
-		
-		ColumnConstraints columnConstraint = new ColumnConstraints();
-		columnConstraint.setPercentWidth(100d);
-		this.getColumnConstraints().add(columnConstraint);
+		this.getChildren().addAll(controlsPane, errorLabel, btnsLayout);
 		
 	}
 	
 	private void addClasses() {
-		resetButton.getStyleClass().addAll("form-button", "reset-btn");
-		submitButton.getStyleClass().addAll("form-button", "submit-btn");
-		errorText.getStyleClass().addAll("error-text", "text-bad");
-		caption.getStyleClass().add("form-caption");
+		resetButton.getStyleClass().addAll("form-button", "reset-btn", "btn", "btn-bad");
+		submitButton.getStyleClass().addAll("form-button", "submit-btn", "btn", "btn-primary");
+		errorLabel.getStyleClass().addAll("error-text", "text-bad");
+	}
+	
+	public static class FormEvent{
+		private boolean canceled = false;
+		
+		public void preventDefault() {
+			this.canceled = true;
+		}
+		
+		public boolean isCanceled() {
+			return canceled;
+		}
 	}
 
 }

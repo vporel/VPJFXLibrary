@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PasswordSecure {
+public class HashLib {
 	public static String md5(String pwd) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");

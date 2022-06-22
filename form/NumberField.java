@@ -1,50 +1,75 @@
 package vplibrary.form;
 
-public abstract class NumberField<T extends Number> extends Input<T> {
-	
-	private T min, max;
-	public NumberField(String label, String name, T min, T max, T defaultValue) {
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import vplibrary.util.Predicate;
+
+public abstract class NumberField<T extends Number> extends InputField<T> {
+	public static String INTERVAL_PREDICATE = "interval";
+	private ObjectProperty<T> 
+		minProperty = new SimpleObjectProperty<>(), 
+		maxProperty = new SimpleObjectProperty<>();
+	private Predicate<T> intervalPredicate;
+	public NumberField(String label, String name, T minValue, T maxValue) {
 		super(label, name);
-		setMin(min);
-		setMax(max);
-		this.setDefaultValue(defaultValue);
+		intervalPredicate = new Predicate<>(value -> {
+			if(value == null)
+				return true;
+			T min = getMin(), max = getMax();
+			if(min == null && max == null) {
+				return true;
+			}else if(min == null && max != null) {
+				return value.doubleValue() <= max.doubleValue();
+			}else {
+				return value.doubleValue() >= min.doubleValue();
+			}
+		}, "Interval non respecté");
+		addPredicate(INTERVAL_PREDICATE, intervalPredicate);
+		minProperty.addListener((opts, oldVal, newVal) -> {
+			changeErrorMessage(); 
+		});
+		maxProperty.addListener((opts, oldVal, newVal) -> {
+			changeErrorMessage(); 
+		});
+		setMin(minValue);
+		setMax(maxValue);
+	}
+	public ObjectProperty<T> minProperty() {
+		return minProperty;
+	}
+	public ObjectProperty<T> maxProperty() {
+		return maxProperty;
 	}
 
 	public T getMin() {
-		return min;
+		return minProperty.getValue();
 	}
 
 	public void setMin(T min) {
-		this.min = min;
-		if(max != null)
-			changeErrorMessage(min, max);
+		this.minProperty.setValue(min);
 	}
 
 	public T getMax() {
-		return max;
+		return maxProperty.getValue();
 	}
 
 	public void setMax(T max) {
-		this.max = max;
-		if(min != null)
-			changeErrorMessage(min, max);
+		this.maxProperty.setValue(max);
 	}
 	
-	public boolean test(T value) {
-		return (value.doubleValue() >= min.doubleValue() && value.doubleValue() <= max.doubleValue());
-	}
+	
 	/**
-	 * Structure
-	 * if(min > T.MIN_VALUE && max == T.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entrï¿½ n'est pas supï¿½rieur ï¿½ "+min);
-		else if(min == T.MIN_VALUE && max <= T.MAX_VALUE)
-			this.setErrorMessage( "Le nombre entrï¿½ n'est pas infï¿½rieur ï¿½ "+max);
-		else
-			this.setErrorMessage( "Le nombre entrï¿½ n'est pas dans l'intervalle ["+min+","+max+"]");
-	 * @param min
-	 * @param max
+	 * Changer le message d'erreur selon les valeurs de min et max
 	 */
-	protected abstract void changeErrorMessage(T min, T max);
+	private void changeErrorMessage() {
+		T min = getMin(), max = getMax();
+		if(min != null && max == null)
+			intervalPredicate.setMessage("Doit être supérieur à "+min);
+		else if(min == null && max != null)
+			intervalPredicate.setMessage("Doit être inférieur à "+max);
+		else
+			intervalPredicate.setMessage("Doit être entre "+min+" et "+max);
+	}
 	
 	
 }

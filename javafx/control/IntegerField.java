@@ -11,7 +11,7 @@ public class IntegerField extends NumberField<Integer>{
 		super();
 	}
 
-    public Integer getValue() {
-	   return (this.getText() == null || this.getText().trim() =="") ? 0 : Integer.parseInt(this.getText());
-   }
+    protected Integer castString(String str) {
+    	return Integer.parseInt(str);
+    }
 }

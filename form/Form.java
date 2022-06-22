@@ -1,131 +1,187 @@
 package vplibrary.form;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import vplibrary.util.VPString;
+import java.util.Map;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
+import vplibrary.util.Predicate;
 
 
-public abstract class Form<Entity> {
+public abstract class Form {
 	
-    protected ArrayList<Field<?>> fields = new ArrayList<>();
-
-    protected String errorMessage = "";
-    
-    protected Entity object;
-	
+    protected Map<String, Field<?>> fields = new HashMap<>();
     /**
-     * 
-     * @param object
-     * @throws NullFormObjectException
-     */
-	public Form(Entity object) throws NullFormObjectException {
-		if(object != null)
-			this.object = object;
-		else
-			throw new NullFormObjectException("L'object passï¿½ au constructeur du formulaire est null.");
+	 * Prédicats sur les données du formulaire
+	 */
+	private ObservableMap<String, Predicate<HashMap<String, Object>>> predicates = FXCollections.observableHashMap();
 
-        build();
-	}
-	
-	public Form(Class entityClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		this.object = (Entity) entityClass.getDeclaredConstructor().newInstance();
-        build();
-	}
-	
-	public Entity getObject() {
-		return object;
-	}
-	
-	public void setObject(Object obj) {
-		object = (Entity) obj;
-	}
+    protected StringProperty errorProperty = new SimpleStringProperty();    
+    protected BooleanProperty validProperty = new SimpleBooleanProperty();
     
-    public ArrayList<Field<?>> getFields()
+    protected HashMap<String, Object> initialData;
+	public Form(HashMap<String, Object> initialData) {
+		this.initialData = initialData;
+		 predicates.addListener(new MapChangeListener<String, Predicate<HashMap<String, Object>>>(){
+			public void onChanged(Change<? extends String, ? extends Predicate<HashMap<String, Object>>> change) {
+				testValidity();
+			}
+        });
+	}
+	
+	public Form() {
+		this(null);
+	}
+	
+	/**
+	 * Les données initiales du formulaire
+	 * @return
+	 */
+	public HashMap<String, Object> getInitialData(){
+		return initialData;
+	}
+	
+	private void testValidity() {
+		boolean valid = true;
+    	HashMap<String, Object> data = getData();
+    	for(Predicate<HashMap<String, Object>> predicate:predicates.values()) {
+    		if(!predicate.test(data)) {
+    			setError(predicate.getMessage());
+    			valid = false;
+    			break;
+    		}
+    	}
+    	if(valid)
+    		setError("");
+    	validProperty.setValue(valid);;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param predicate HashMap<String, Object> Les données du formulaire
+	 * @return
+	 */
+	public Form addPredicate(String name, Predicate<HashMap<String, Object>> predicate){
+    	this.predicates.put(name, predicate);
+    	return this;
+    }
+	
+	public Predicate<HashMap<String, Object>> getPredicate(String name){
+    	if(predicates.containsKey(name)) {
+    		return predicates.get(name);
+    	}else {
+    		throw new IllegalArgumentException("Aucun prédicat portant le nom : "+name);
+    	}
+    }
+	    
+	
+    public Map<String, Field<?>> getFields()
     {
         return fields;
     }
 
-    protected Form<Entity> addField(Field<?> field)
+    /**
+     * Ajout d'un champ au formulaire
+     * @param field
+     * @return
+     */
+    protected Form addField(Field<?> field)
     {
-        fields.add(field);
+        fields.put(field.getName(), field);
+        if(initialData != null && initialData.containsKey(field.getName())) {
+        	try {
+        		field.setRawValue(initialData.get(field.getName()));
+        	}catch(ClassCastException e) {
+        		//Do nothing
+        	}
+        }
+        
+        field.valueProperty().addListener((val) -> {
+        	testValidity();
+        });
         return this;
     }
-
-
-    public boolean hasError()
+    
+    public String getError()
     {
-        return !errorMessage.isBlank();
+        return errorProperty.getValue();
     }
     
-    public String getErrorMessage()
-    {
-        return errorMessage;
+    private Form setError(String error) {
+    	errorProperty.setValue(error);
+    	return this;
     }
- 
-    public void updateObject(HashMap<String, Object> objectData){
-    	updateObject(objectData, object);
-	
+    
+    public StringProperty errorProperty() {
+    	return errorProperty;
+    }
+    
+    /**
+     * Vérifie la validité de chaque champ et la validité du formulaire tout entier
+     * @return
+     */
+    public boolean isValid() {
+    	boolean fieldsValid = true;
+    	for(Field<?> field:fields.values()) {
+    		if(!field.isValid()) {
+    			fieldsValid = false;
+    			break;
+    		}
+    	}
+    	testValidity();
+    	return fieldsValid && validProperty.getValue();
+    }
+    
+    public ReadOnlyBooleanProperty validProperty() {
+		return validProperty;
 	}
     
     /**
-     * Peut ï¿½tre appelï¿½e pour hydrater l'objet en paramï¿½tre en lui passant les donnï¿½es (aussi en paramï¿½tre)
-     * @param objectData
-     * @param obj
+     * @return Les données actuelles du formulaire
      */
-    public void updateObject(HashMap<String, Object> objectData, Entity obj) {
-    	Class<?> objectClass = object.getClass();
-    	objectData.forEach((key, value) -> {
-    		try {
-    			if(value != null) {
-	    			if(value instanceof Option)
-						value = ((Option) value).getValue();
-					Method m = objectClass.getMethod("set"+VPString.ucfirst(key), value.getClass());
-					Field<?> field = fields.get(0);
-					for(Field<?> f : fields) {
-						if(f.getName() == key) {
-							field = f;
-						}
-					}
-					if(field instanceof PasswordField)
-						m.invoke(obj, ((PasswordField) field).getRealValue(String.valueOf(value)));
-					else {
-						m.invoke(obj, value);
-					}
-    			}
-			} catch (NoSuchMethodException|SecurityException|IllegalAccessException|IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	});
+    public HashMap<String, Object> getData(){
+    	HashMap<String, Object> data = new HashMap<>();
+    	for(Field<?> field:fields.values()) {
+    		data.put(field.getName(), field.getValue());
+    	}
+    	return data;
     }
     
-    public Entity newObjectClassInstance() {
-    	try {
-			return (Entity) object.getClass().getDeclaredConstructor().newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-    }
-    
-    
-    public abstract boolean isValid(Entity testObject);
-    public boolean isValid() {
-    	return isValid(object);
-    }
-
     /**
-     * In this method, the user(developer) is asked to add the fields of the form.
+     * Remplir tous les champs avec les données initiales. S'il n'y a pas de données initiales, les champs sont vidés
+     * @return
      */
-    abstract public void build();
-
+    public Form reset() {
+    	for(Field<?> field:fields.values()) {
+			if(initialData != null && initialData.containsKey(field.getName())) {
+				try {
+					field.setRawValue(initialData.get(field.getName()));
+				}catch(ClassCastException e) {
+					// Do nothing
+				}
+			}else {
+				field.setValue(null);
+			}
+    	}
+    	return this;
+    }
     
+    /**
+     * Vider tous les champs
+     * @return
+     */
+    public Form empty() {
+    	for(Field<?> field:fields.values()) {
+    		field.setValue(null);
+    	}
+    	return this;
+    }
 
 }

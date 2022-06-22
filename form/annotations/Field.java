@@ -7,7 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Cette annotation doit toujours ï¿½tre utilisï¿½ avec une autre dï¿½finissant le vï¿½ritable champ
  * @author VPOREL-DEV
  *
  */
@@ -17,7 +16,7 @@ public @interface Field {
 	public String label();
 	
 	/**
-	 * Texte ï¿½ afficher pour aider l'utilisateur ï¿½ comprendre ï¿½ quoi sert le champ
+	 * Texte à afficher pour aider l'utilisateur à comprendre à quoi sert le champ
 	 * @return
 	 */
 	public String tooltip() default "";
